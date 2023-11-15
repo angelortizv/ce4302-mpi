@@ -11,6 +11,8 @@
 #include <mpi.h>
 
 #define MAX_MSG_SIZE 1000000
+#define ANSI_COLOR_RED     "\x1b[31m"
+
 
 int main(int argc, char** argv) {
     MPI_Init(&argc, &argv);
@@ -49,7 +51,7 @@ int main(int argc, char** argv) {
             end_time = MPI_Wtime();
 
             // Print results on node 1
-            printf("Message size: %d bytes, Communication time: %f seconds\n", msg_size, end_time - start_time);
+            printf(ANSI_COLOR_RED "Message size: %d bytes, Communication time: %f seconds\n", msg_size, end_time - start_time);
         }
 
         free(message);

@@ -10,7 +10,8 @@
 #include <stdlib.h>
 #include <mpi.h>
 
-#define N 4  // Size of the matrices
+#define N 500  // Size of the matrices
+#define ANSI_COLOR_RED     "\x1b[31m"
 
 void fillMatriz(int matriz[N][N]) {
     // Fill the matrix with random values
@@ -50,11 +51,11 @@ int main(int argc, char** argv) {
         fillMatriz(A);
         fillMatriz(B);
 
-        printf("Matrix A:\n");
-        printMatriz(A);
+        // printf("Matrix A:\n");
+        // printMatriz(A);
 
-        printf("Matrix B:\n");
-        printMatriz(B);
+        // printf("Matrix B:\n");
+        // printMatriz(B);
     }
 
     // Broadcast matrices A and B to all nodes
@@ -74,16 +75,16 @@ int main(int argc, char** argv) {
     }
 
     // Print information about the local sum on each node
-    printf("Node %d: Local sum of rows %d to %d\n", rank, inicio, fin - 1);
+    printf(ANSI_COLOR_RED "Node %d: Local sum of rows %d to %d\n", rank, inicio, fin - 1);
 
     // Gather results back to node 0
     MPI_Gather(A + inicio, chunkSize * N, MPI_INT, A, chunkSize * N, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Print the result on node 0
-    if (rank == 0) {
-        printf("Resulting matrix:\n");
-        printMatriz(A);
-    }
+    // if (rank == 0) {
+    //     printf("Resulting matrix:\n");
+    //     printMatriz(A);
+    // }
 
     MPI_Finalize();
 
