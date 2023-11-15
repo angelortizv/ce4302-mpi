@@ -14,15 +14,6 @@
 #define N 500  // Size of the matrices
 #define ANSI_COLOR_RED "\x1b[31m"
 
-void fillMatriz(int matriz[N][N]) {
-    // Fill the matrix with random values
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            matriz[i][j] = rand() % 10;
-        }
-    }
-}
-
 void printMatriz(FILE *file, int matriz[N][N]) {
     // Print the matrix to file
     for (int i = 0; i < N; i++) {
@@ -49,8 +40,19 @@ int main(int argc, char **argv) {
     int A[N][N], B[N][N], result[N][N];
 
     if (rank == 0) {
-        fillMatriz(A);
-        fillMatriz(B);
+        // Fill the matrix with random values
+        srand(time(NULL));
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                A[i][j] = rand() % 10;
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                B[i][j] = rand() % 10;
+            }
+        }
 
         FILE *file = fopen("./src/files/initial.txt", "w");
         if (file == NULL) {
