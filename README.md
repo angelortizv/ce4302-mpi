@@ -12,7 +12,7 @@ This project consists of two programs implemented in C using the MPI (Message Pa
 
 ### Prerequisites
 
-Make sure to have MPI installed on your system. You can install it using:
+1. Make sure to have MPI installed on your system. You can install it using:
 
 ```bash
 sudo apt update
@@ -20,6 +20,12 @@ sudo apt install openmpi-bin
 sudo apt install libopenmpi-dev
 mpicc --version
 ```
+
+2. Create a MPI Cluster
+
+3 Virtual Machines with Ubuntu 18.04.06 were created for this task using Virtualbox .
+Follow these instructions to creat the MPI CLUSTER:
+https://www.geeksforgeeks.org/creating-an-mpi-cluster/
 
 ### Compile and Execute
 
