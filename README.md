@@ -23,9 +23,11 @@ mpicc --version
 
 2. Create a MPI Cluster
 
-3 Virtual Machines with Ubuntu 18.04.06 were created for this task using Virtualbox .
-Follow these instructions to creat the MPI CLUSTER:
+3 Virtual Machines with Ubuntu 18.04.06 were created for this task using VirtualBox.
+
+Follow these instructions to create the MPI CLUSTER:
 https://www.geeksforgeeks.org/creating-an-mpi-cluster/
+
 
 ### Compile and Execute
 
