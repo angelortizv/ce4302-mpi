@@ -16,7 +16,6 @@
 
 void fillMatriz(int matriz[N][N]) {
     // Fill the matrix with random values
-    srand(time(NULL));
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             matriz[i][j] = rand() % 10;
@@ -52,6 +51,19 @@ int main(int argc, char **argv) {
     if (rank == 0) {
         fillMatriz(A);
         fillMatriz(B);
+
+        FILE *file = fopen("./src/files/initial.txt", "w");
+        if (file == NULL) {
+            perror("Error opening file");
+            MPI_Abort(MPI_COMM_WORLD, 1);
+        }
+
+        fprintf(file, "Matriz A:\n");
+        printMatriz(file, A);
+        fprintf(file, "\nMatriz B:\n");
+        printMatriz(file, B);
+
+        fclose(file);
     }
 
     // Broadcast matrices A and B to all nodes
@@ -66,7 +78,7 @@ int main(int argc, char **argv) {
     // Perform local matrix addition on each node
     for (int i = inicio; i < fin; i++) {
         for (int j = 0; j < N; j++) {
-            result[i][j] = A[i][j] + B[i][j];
+            A[i][j] = A[i][j] + B[i][j];
         }
     }
 
@@ -79,7 +91,7 @@ int main(int argc, char **argv) {
     printf("Node %d: Local sum of rows %d to %d\n", rank, inicio, fin - 1);
 
     // Gather results back to node 0
-    MPI_Gather(result + inicio, chunkSize * N, MPI_INT, result, chunkSize * N, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gather(A + inicio, chunkSize * N, MPI_INT, A, chunkSize * N, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Wait for all processes to synchronize
     MPI_Barrier(MPI_COMM_WORLD);
@@ -92,12 +104,8 @@ int main(int argc, char **argv) {
             MPI_Abort(MPI_COMM_WORLD, 1);
         }
 
-        fprintf(file, "Matriz A:\n");
-        printMatriz(file, A);
-        fprintf(file, "\nMatriz B:\n");
-        printMatriz(file, B);
         fprintf(file, "\nResult:\n");
-        printMatriz(file, result);
+        printMatriz(file, A);
 
         fclose(file);
     }
