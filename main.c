@@ -21,7 +21,8 @@ int main(int argc, char **argv) {
 
     if (choice == 1) {
         system("mpicc -o src/output/sum_matrices src/sum_matrices.c");
-        system("mpirun -np 3 src/output/sum_matrices");
+        //system("mpirun -np 3 src/output/sum_matrices");
+        system("mpirun -np 3 -H manager,worker1,worker2 src/output/sum_matrices");
     } else if (choice == 2) {
         system("mpicc -o src/output/performance_evaluation src/performance_evaluation.c");
         system("mpirun -np 3 src/output/performance_evaluation");
