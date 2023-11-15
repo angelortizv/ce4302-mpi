@@ -9,12 +9,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <mpi.h>
+#include <time.h>
 
 #define N 500  // Size of the matrices
 #define ANSI_COLOR_RED "\x1b[31m"
 
 void fillMatriz(int matriz[N][N]) {
     // Fill the matrix with random values
+    srand(time(NULL));
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             matriz[i][j] = rand() % 10;
@@ -45,7 +47,7 @@ int main(int argc, char **argv) {
     }
 
     // Create matrices A and B
-    int A[N][N], B[N][N];
+    int A[N][N], B[N][N], result[N][N];
 
     if (rank == 0) {
         fillMatriz(A);
@@ -64,7 +66,7 @@ int main(int argc, char **argv) {
     // Perform local matrix addition on each node
     for (int i = inicio; i < fin; i++) {
         for (int j = 0; j < N; j++) {
-            A[i][j] += B[i][j];
+            result[i][j] = A[i][j] + B[i][j];
         }
     }
 
@@ -77,7 +79,7 @@ int main(int argc, char **argv) {
     printf("Node %d: Local sum of rows %d to %d\n", rank, inicio, fin - 1);
 
     // Gather results back to node 0
-    MPI_Gather(A + inicio, chunkSize * N, MPI_INT, A, chunkSize * N, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Gather(result + inicio, chunkSize * N, MPI_INT, result, chunkSize * N, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Wait for all processes to synchronize
     MPI_Barrier(MPI_COMM_WORLD);
@@ -95,7 +97,7 @@ int main(int argc, char **argv) {
         fprintf(file, "\nMatriz B:\n");
         printMatriz(file, B);
         fprintf(file, "\nResult:\n");
-        printMatriz(file, A);
+        printMatriz(file, result);
 
         fclose(file);
     }
