@@ -50,12 +50,6 @@ int main(int argc, char** argv) {
     if (rank == 0) {
         fillMatriz(A);
         fillMatriz(B);
-
-        // printf("Matrix A:\n");
-        // printMatriz(A);
-
-        // printf("Matrix B:\n");
-        // printMatriz(B);
     }
 
     // Broadcast matrices A and B to all nodes
@@ -74,8 +68,14 @@ int main(int argc, char** argv) {
         }
     }
 
-    // Print information about the local sum on each node
-    printf(ANSI_COLOR_RED "Node %d: Local sum of rows %d to %d\n", rank, inicio, fin - 1);
+    // Get the processor name
+    char processor_name[MPI_MAX_PROCESSOR_NAME];
+    int name_len;
+    MPI_Get_processor_name(processor_name, &name_len);
+    printf(ANSI_COLOR_RED "\nProcess %d of %d on %s\n", rank, size, processor_name);
+
+    printf("Node %d: Local sum of rows %d to %d\n", rank, inicio, fin - 1);
+
 
     // Gather results back to node 0
     MPI_Gather(A + inicio, chunkSize * N, MPI_INT, A, chunkSize * N, MPI_INT, 0, MPI_COMM_WORLD);
